@@ -49,16 +49,22 @@ def parse_that_email(messagefile):
             keyword=config[x]['keyword']
             FromList = str.lower(config[x]['from'])
             SubjectList = str.lower(config[x]['subject'])
-            if str(mail.from_) in FromList.split():
-                outdir = keyword
-            else:
-                if str(mail.subject) in SubjectList.split():
+            # Mailparser returns each thing as an odd tuple, so this works
+            # best for trying to parse it.
+            fromliststr=str(mail.from_).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", ' ').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
+            for y in FromList.split():
+                if y in fromliststr:
                     outdir = keyword
+                    print(keyword)
+                else:
+                    if str(mail.subject) in SubjectList.split():
+                        outdir = keyword
+                        print(keyword)
 #TODO:  The subject is a string fragment match, not a word match, gah
 #TODO:  The directory is attached to the base outdir.
 
 # Using now/localtime + time sleep to make sure it's all different for filename of outfile. 
-
+    
     time.sleep(2)
     date_published = localtime()  
     thetime=time.strftime("%Y%m%d%H%M%S",localtime())
@@ -74,6 +80,7 @@ def parse_that_email(messagefile):
     print('Robots: noindex,nofollow')
     print('Template: index')
     print ('---')
+    #currently commented out so stdout isn't cluttered
     #if mail.text_html:
     #    print('html: ' + str(mail.text_html))
     #else:
