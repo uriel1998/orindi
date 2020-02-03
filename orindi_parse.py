@@ -51,16 +51,28 @@ def parse_that_email(messagefile):
             SubjectList = str.lower(config[x]['subject'])
             # Mailparser returns each thing as an odd tuple, so this works
             # best for trying to parse it.
+            
+#TODO: the from strings need to be lowercased for matching; subject is already
+#working
+            
             fromliststr=str(mail.from_).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", ' ').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
-            for y in FromList.split():
-                if y in fromliststr:
-                    outdir = keyword
-                    print(keyword)
-                else:
-                    if str(mail.subject) in SubjectList.split():
+            outdir = ''
+            if FromList:
+                print("a")
+                for y in FromList.split():
+                    print(y)
+                    if y in fromliststr:
                         outdir = keyword
                         print(keyword)
+            if not outdir:
+                if SubjectList:
+                    for y in SubjectList.split(','):
+                        print(y)
+                        if y in str.lower(mail.subject):
+                            outdir = keyword
+                            print(keyword)
 #TODO:  The subject is a string fragment match, not a word match, gah
+#TODO:  Error check for if there's not a match, because then we should ignore it.
 #TODO:  The directory is attached to the base outdir.
 
 # Using now/localtime + time sleep to make sure it's all different for filename of outfile. 
