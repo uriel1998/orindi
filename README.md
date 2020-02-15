@@ -4,7 +4,7 @@ A modular system to take a list of RSS feeds, process them, and send them to
 social media with images, content warnings, and sensitive image flags when 
 available. 
 
-![agaetr logo](https://raw.githubusercontent.com/uriel1998/agaetr/master/agaetr-open-graph.png "logo")
+![orindi logo](https://raw.githubusercontent.com/uriel1998/orindi/master/orindi-open-graph.png "logo")
 
 ## Contents
  1. [About](#1-about)
@@ -27,6 +27,12 @@ available.
 This project is licensed under the Apache License. For the full license, see `LICENSE`.
 
 ## 3. Prerequisites
+
+
+ShortUUID https://github.com/skorokithakis/shortuuid
+#REQUIRES
+#https://github.com/SpamScope/mail-parser
+#https://pypi.org/project/mail-parser/
 
 
 ## 4. Installation

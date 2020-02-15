@@ -1,9 +1,6 @@
 #!/usr/bin/python3
 
-#REQUIRES
-#https://github.com/SpamScope/mail-parser
-#https://pypi.org/project/mail-parser/
-
+import shortuuid
 import sys, getopt, re 
 import mailparser
 import datetime,time
@@ -32,7 +29,7 @@ ini = os.path.join(configdir,'orindi.ini')
 ########################################################################
 def parse_that_email(messagefile):
     print ('Message file is ' + messagefile)
-
+    
     with open(messagefile,'r') as fp:
          mail = mailparser.parse_from_file_obj(fp)
 
@@ -52,10 +49,8 @@ def parse_that_email(messagefile):
             # Mailparser returns each thing as an odd tuple, so this works
             # best for trying to parse it.
             
-#TODO: the from strings need to be lowercased for matching; subject is already
-#working
-            
-            fromliststr=str(mail.from_).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", ' ').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
+            fromliststr = str(mail.from_).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", ' ').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
+            fromliststr = str.lower(fromliststr)
             outdir = ''
             if FromList:
                 print("a")
@@ -71,34 +66,37 @@ def parse_that_email(messagefile):
                         if y in str.lower(mail.subject):
                             outdir = keyword
                             print(keyword)
-#TODO:  The subject is a string fragment match, not a word match, gah
-#TODO:  Error check for if there's not a match, because then we should ignore it.
-#TODO:  The directory is attached to the base outdir.
+            if outdir:
+                
+                FullOutDir = BaseOutDir + '/' + outdir
+                if not os.path.isdir(FullOutDir):
+                    os.makedirs(FullOutDir)
+                filename=shortuuid.uuid()
+                postfile = BaseOutDir + '/' + outdir + '/' + filename
+                f = open(postfile, 'w')
 
-# Using now/localtime + time sleep to make sure it's all different for filename of outfile. 
-    
-    time.sleep(2)
-    date_published = localtime()  
-    thetime=time.strftime("%Y%m%d%H%M%S",localtime())
-    print ('Date2: ' + thetime)
-    #define postfile name
-    #  f = open(postfile, 'a')
-
-    print ('---')
-    print('Title: ' + str(mail.subject))
-    print('Description: ' + str(mail.subject))
-    print('Author: ' + str(mail.from_))
-    print('Date: ' + str(mail.date))
-    print('Robots: noindex,nofollow')
-    print('Template: index')
-    print ('---')
-    #currently commented out so stdout isn't cluttered
-    #if mail.text_html:
-    #    print('html: ' + str(mail.text_html))
-    #else:
-    #    print('text: ' + str(mail.text_plain))
-    #f.close
+                f.write ('---' + "\n")
+                f.write('Title: ' + str(mail.subject) + "\n")
+                f.write('Description: ' + str(mail.subject) + "\n")
+                f.write('Author: ' + str(mail.from_) + "\n")
+                f.write('Date: ' + str(mail.date) + "\n")
+                f.write('Robots: noindex,nofollow' + "\n")
+                f.write('Template: index' + "\n")
+                f.write ('---' + "\n")
+                #currently commented out so stdout isn't cluttered
+                # This is currently returning html: [' like i had the problem with teh subject ugh
+                if mail.text_html:
+                    f.write('html: ' + str(mail.text_html) + "\n")
+                else:
+                    f.write('text: ' + str(mail.text_plain) + "\n")
+                f.close
+        
     fp.close
+
+
+                
+#TODO:  The subject is a string fragment match, not a word match, gah
+    
 
 ########################################################################
 # Read ini section
@@ -111,6 +109,7 @@ sections=config.sections()
 ########################################################################
 # Main function
 ########################################################################
+BaseOutDir=config['DEFAULT']['BaseDir']
 infile = ''
 infile = (sys.argv[1])  # using ini here, oh procmail copy to handle
 parse_that_email(infile)
