@@ -37,6 +37,7 @@ ShortUUID https://github.com/skorokithakis/shortuuid
 
 ## 4. Installation
 
+### Installation of pico - include feed.twig creation as setup process.
 
 ## 5. Usage
 

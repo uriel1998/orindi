@@ -23,6 +23,11 @@ if not os.path.isdir(configdir):
     os.makedirs(user_config_dir(appname))
 ini = os.path.join(configdir,'orindi.ini')
 
+#https://medium.com/@jorlugaqui/how-to-strip-html-tags-from-a-string-in-python-7cb81a2bbf44
+def remove_doctype(text):
+    import re
+    clean = re.compile('<!DOCTYPE .*?>')
+    return re.sub(clean, '', text)
 
 ########################################################################
 # Parsing that email!
@@ -50,19 +55,24 @@ def parse_that_email(messagefile):
             # best for trying to parse it.
             
             fromliststr = str(mail.from_).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", ' ').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
+            
+            # Getting output from addresses here before I transform the string
+            FromString = ''
+            for y in fromliststr.split('  '):
+                if y:
+                    if not FromString:
+                        FromString = y.strip()
+
             fromliststr = str.lower(fromliststr)
             outdir = ''
             if FromList:
-                print("a")
                 for y in FromList.split():
-                    print(y)
                     if y in fromliststr:
                         outdir = keyword
                         print(keyword)
             if not outdir:
                 if SubjectList:
                     for y in SubjectList.split(','):
-                        print(y)
                         if y in str.lower(mail.subject):
                             outdir = keyword
                             print(keyword)
@@ -78,22 +88,34 @@ def parse_that_email(messagefile):
                 f.write ('---' + "\n")
                 f.write('Title: ' + str(mail.subject) + "\n")
                 f.write('Description: ' + str(mail.subject) + "\n")
-                f.write('Author: ' + str(mail.from_) + "\n")
+                # THIS MUST BE UNTANGLED TO A SINGLE STRING!!!!
+                print('Author: ' + FromString)
+                f.write('Author: ' + FromString + "\n")
                 f.write('Date: ' + str(mail.date) + "\n")
                 f.write('Robots: noindex,nofollow' + "\n")
                 f.write('Template: index' + "\n")
                 f.write ('---' + "\n")
                 #currently commented out so stdout isn't cluttered
                 # This is currently returning html: [' like i had the problem with teh subject ugh
+                # Remove "DOCTYPE" tag
+                # remove extra "\n" - NOT newlines, but literal \\n
+                # AND GET RID OF TRACKING BEACONS
+                # <img style="overflow: hidden;position: fixed;visibility: hidden !important;display: block !important;height: 1px !important;width: 1px !important;border: 0 !important;margin: 0 !important;padding: 0 !important;" src="https://connectednation.cmail20.com/t/j-o-chklljl-yuiyjkttht/o.gif" width="1" height="1" border="0" alt="">
                 if mail.text_html:
-                    f.write('html: ' + str(mail.text_html) + "\n")
+                    bodyhtml = str(mail.text_html).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", ' ').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
+                    # HOW DO YOU REMOVE A LITERAL \n ?
+                    bodyhtml = bodyhtml.replace("\\n", "")
+                    #bodyhtml = re.sub('\n', '', bodyhtml)
+                    writestring = remove_doctype(bodyhtml)
+                    f.write(writestring + "\n")
                 else:
                     f.write('text: ' + str(mail.text_plain) + "\n")
                 f.close
         
     fp.close
 
-
+#NOTE: If directory does not exist, need to create KEYWORD.md and keyword-index.twig 
+# (instead of blog-index.twig) and create feed.md file in content folder
                 
 #TODO:  The subject is a string fragment match, not a word match, gah
     
