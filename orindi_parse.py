@@ -48,6 +48,7 @@ def parse_that_email(messagefile):
     ##########################################################################
     for x in sections:
         if "feed" in (str.lower(x)):
+            # need to loop over these and append them to a matching string, 
             keyword=config[x]['keyword']
             FromList = str.lower(config[x]['from'])
             SubjectList = str.lower(config[x]['subject'])
@@ -81,7 +82,7 @@ def parse_that_email(messagefile):
                 FullOutDir = BaseOutDir + '/' + outdir
                 if not os.path.isdir(FullOutDir):
                     os.makedirs(FullOutDir)
-                filename=shortuuid.uuid()
+                filename=shortuuid.uuid() + '.md'
                 postfile = BaseOutDir + '/' + outdir + '/' + filename
                 f = open(postfile, 'w')
 
@@ -96,20 +97,27 @@ def parse_that_email(messagefile):
                 f.write('Template: index' + "\n")
                 f.write ('---' + "\n")
                 #currently commented out so stdout isn't cluttered
-                # This is currently returning html: [' like i had the problem with teh subject ugh
                 # Remove "DOCTYPE" tag
-                # remove extra "\n" - NOT newlines, but literal \\n
+#MAYBE DO TEXT FIRST?  AND I *have* to figure out what's going on with that one email without explicit msg type blocks
                 # AND GET RID OF TRACKING BEACONS
                 # <img style="overflow: hidden;position: fixed;visibility: hidden !important;display: block !important;height: 1px !important;width: 1px !important;border: 0 !important;margin: 0 !important;padding: 0 !important;" src="https://connectednation.cmail20.com/t/j-o-chklljl-yuiyjkttht/o.gif" width="1" height="1" border="0" alt="">
                 if mail.text_html:
                     bodyhtml = str(mail.text_html).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", ' ').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
                     # HOW DO YOU REMOVE A LITERAL \n ?
-                    bodyhtml = bodyhtml.replace("\\n", "")
-                    #bodyhtml = re.sub('\n', '', bodyhtml)
+                    bodyhtml = bodyhtml.replace("\\n", "").replace("\\t", "")
                     writestring = remove_doctype(bodyhtml)
                     f.write(writestring + "\n")
                 else:
-                    f.write('text: ' + str(mail.text_plain) + "\n")
+                    if mail.text_plain:
+                        #will need to parse apostrophes, huh?
+                        bodytxt = str(mail.text_plain).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", ' ').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
+                        bodytxt = bodytxt.replace("\\n", "<br />").replace("\\t", "")
+                        f.write(bodytxt + "\n")
+                    else: 
+                        bodyhtml = str(mail.text).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", ' ').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
+                        bodyhtml = bodyhtml.replace("\\n", "").replace("\\t", "")
+                        writestring = remove_doctype(bodyhtml)
+                        f.write(writestring + "\n")
                 f.close
         
     fp.close
@@ -118,7 +126,7 @@ def parse_that_email(messagefile):
 # (instead of blog-index.twig) and create feed.md file in content folder
                 
 #TODO:  The subject is a string fragment match, not a word match, gah
-    
+    #FFS THE PICO URL IS /?subdir
 
 ########################################################################
 # Read ini section
