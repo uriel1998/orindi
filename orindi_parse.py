@@ -12,7 +12,7 @@ from os.path import expanduser
 from appdirs import *
 from pathlib import Path
 import pypandoc
-
+from html import unescape
 ########################################################################
 # Defining configuration locations and such
 ########################################################################
@@ -88,35 +88,32 @@ def parse_that_email(messagefile):
                 f.write('Robots: noindex,nofollow' + "\n")
                 f.write('Template: index' + "\n")
                 f.write ('---' + "\n")
-                #currently commented out so stdout isn't cluttered
-#WE are getting &lt and &gt which is fucking up the formatting.... argh
-#Also need to remove empty paragraphs
-# MULTIPLE INI FILES?
-#MAYBE DO TEXT FIRST?  AND I *have* to figure out what's going on with that one email without explicit msg type blocks
-                # using github markdown with pypandoc seems to be working well
-                # AND GET RID OF TRACKING BEACONS
-                # <img style="overflow: hidden;position: fixed;visibility: hidden !important;display: block !important;height: 1px !important;width: 1px !important;border: 0 !important;margin: 0 !important;padding: 0 !important;" src="https://connectednation.cmail20.com/t/j-o-chklljl-yuiyjkttht/o.gif" width="1" height="1" border="0" alt="">
                 if mail.text_html:
                     bodyhtml = str(mail.text_html).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", ' ').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
-                    # HOW DO YOU REMOVE A LITERAL \n ?
                     bodyhtml = bodyhtml.replace("\\n", "<br />").replace("\\t", "")
+                    bodyhtml = unescape(bodyhtml)
                     writestring = pypandoc.convert_text(bodyhtml, 'markdown_github', format='html')
-                    #writestring = remove_doctype(bodyhtml)
                     f.write(writestring + "\n")
                 else:
                     if mail.text_plain:
-                        #will need to parse apostrophes, huh?
                         bodytxt = str(mail.text_plain).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", ' ').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
                         bodytxt = bodytxt.replace("\\n", "<br />").replace("\\t", "")
                         f.write(bodytxt + "\n")
                     else: 
                         bodyhtml = str(mail.text_not_managed).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", ' ').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
                         bodyhtml = bodyhtml.replace("\\n", "").replace("\\t", "")
+                        bodyhtml = unescape(bodyhtml)
                         writestring = pypandoc.convert_text(bodyhtml, 'markdown_github', format='html')
                         f.write(writestring + "\n")
                 f.close
         
     fp.close
+
+                #currently commented out so stdout isn't cluttered
+                #Also need to remove empty paragraphs
+                # using github markdown with pypandoc seems to be working well
+                # AND GET RID OF TRACKING BEACONS
+                # <img style="overflow: hidden;position: fixed;visibility: hidden !important;display: block !important;height: 1px !important;width: 1px !important;border: 0 !important;margin: 0 !important;padding: 0 !important;" src="https://connectednation.cmail20.com/t/j-o-chklljl-yuiyjkttht/o.gif" width="1" height="1" border="0" alt="">
 
 #NOTE: If directory does not exist, need to create KEYWORD.md and keyword-index.twig 
 # (instead of blog-index.twig) and create feed.md file in content folder
@@ -133,8 +130,6 @@ def parse_that_email(messagefile):
 config = configparser.ConfigParser()
 IniList = os.listdir(configdir)    
 for x in IniList:
-#ini = os.path.join(configdir,'orindi.ini')
-#ini2 = os.path.join(configdir,'other.ini')
     ini=os.path.join(configdir,x)
     config.read([ini])
     sections=config.sections()
