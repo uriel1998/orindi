@@ -33,7 +33,7 @@ ShortUUID https://github.com/skorokithakis/shortuuid
 #REQUIRES
 #https://github.com/SpamScope/mail-parser
 #https://pypi.org/project/mail-parser/
-
+#pypandoc from package (python3-pypandoc) or via pip  https://pypi.org/project/pypandoc/
 
 ## 4. Installation
 

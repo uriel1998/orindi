@@ -11,6 +11,7 @@ import os
 from os.path import expanduser
 from appdirs import *
 from pathlib import Path
+import pypandoc
 
 ########################################################################
 # Defining configuration locations and such
@@ -22,13 +23,7 @@ configdir = user_config_dir(appname)
 if not os.path.isdir(configdir):
     os.makedirs(user_config_dir(appname))
 ini = os.path.join(configdir,'orindi.ini')
-
-#https://medium.com/@jorlugaqui/how-to-strip-html-tags-from-a-string-in-python-7cb81a2bbf44
-def remove_doctype(text):
-    import re
-    clean = re.compile('<!DOCTYPE .*?>')
-    return re.sub(clean, '', text)
-
+ini2 = os.path.join(configdir,'other.ini')
 ########################################################################
 # Parsing that email!
 ########################################################################
@@ -89,23 +84,25 @@ def parse_that_email(messagefile):
                 f.write ('---' + "\n")
                 f.write('Title: ' + str(mail.subject) + "\n")
                 f.write('Description: ' + str(mail.subject) + "\n")
-                # THIS MUST BE UNTANGLED TO A SINGLE STRING!!!!
-                print('Author: ' + FromString)
                 f.write('Author: ' + FromString + "\n")
                 f.write('Date: ' + str(mail.date) + "\n")
                 f.write('Robots: noindex,nofollow' + "\n")
                 f.write('Template: index' + "\n")
                 f.write ('---' + "\n")
                 #currently commented out so stdout isn't cluttered
-                # Remove "DOCTYPE" tag
+#WE are getting &lt and &gt which is fucking up the formatting.... argh
+#Also need to remove empty paragraphs
+# MULTIPLE INI FILES?
 #MAYBE DO TEXT FIRST?  AND I *have* to figure out what's going on with that one email without explicit msg type blocks
+                # using github markdown with pypandoc seems to be working well
                 # AND GET RID OF TRACKING BEACONS
                 # <img style="overflow: hidden;position: fixed;visibility: hidden !important;display: block !important;height: 1px !important;width: 1px !important;border: 0 !important;margin: 0 !important;padding: 0 !important;" src="https://connectednation.cmail20.com/t/j-o-chklljl-yuiyjkttht/o.gif" width="1" height="1" border="0" alt="">
                 if mail.text_html:
                     bodyhtml = str(mail.text_html).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", ' ').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
                     # HOW DO YOU REMOVE A LITERAL \n ?
-                    bodyhtml = bodyhtml.replace("\\n", "").replace("\\t", "")
-                    writestring = remove_doctype(bodyhtml)
+                    bodyhtml = bodyhtml.replace("\\n", "<br />").replace("\\t", "")
+                    writestring = pypandoc.convert_text(bodyhtml, 'markdown_github', format='html')
+                    #writestring = remove_doctype(bodyhtml)
                     f.write(writestring + "\n")
                 else:
                     if mail.text_plain:
@@ -114,9 +111,9 @@ def parse_that_email(messagefile):
                         bodytxt = bodytxt.replace("\\n", "<br />").replace("\\t", "")
                         f.write(bodytxt + "\n")
                     else: 
-                        bodyhtml = str(mail.text).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", ' ').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
+                        bodyhtml = str(mail.text_not_managed).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", ' ').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
                         bodyhtml = bodyhtml.replace("\\n", "").replace("\\t", "")
-                        writestring = remove_doctype(bodyhtml)
+                        writestring = pypandoc.convert_text(bodyhtml, 'markdown_github', format='html')
                         f.write(writestring + "\n")
                 f.close
         
@@ -132,8 +129,11 @@ def parse_that_email(messagefile):
 # Read ini section
 ########################################################################
 
+#https://stackoverflow.com/questions/4029946/multiple-configuration-files-with-python-configparser
+#multiple ini files for each section
+
 config = configparser.ConfigParser()
-config.read(ini)
+config.read([ini,ini2])
 sections=config.sections()
 
 ########################################################################
