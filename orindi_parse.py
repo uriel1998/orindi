@@ -22,8 +22,7 @@ appauthor = "Steven Saus"
 configdir = user_config_dir(appname)
 if not os.path.isdir(configdir):
     os.makedirs(user_config_dir(appname))
-ini = os.path.join(configdir,'orindi.ini')
-ini2 = os.path.join(configdir,'other.ini')
+
 ########################################################################
 # Parsing that email!
 ########################################################################
@@ -131,10 +130,14 @@ def parse_that_email(messagefile):
 
 #https://stackoverflow.com/questions/4029946/multiple-configuration-files-with-python-configparser
 #multiple ini files for each section
-
 config = configparser.ConfigParser()
-config.read([ini,ini2])
-sections=config.sections()
+IniList = os.listdir(configdir)    
+for x in IniList:
+#ini = os.path.join(configdir,'orindi.ini')
+#ini2 = os.path.join(configdir,'other.ini')
+    ini=os.path.join(configdir,x)
+    config.read([ini])
+    sections=config.sections()
 
 ########################################################################
 # Main function
