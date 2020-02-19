@@ -108,7 +108,6 @@ def parse_that_email(messagefile):
                 f.close
         
     fp.close
-
                 #currently commented out so stdout isn't cluttered
                 #Also need to remove empty paragraphs
                 # using github markdown with pypandoc seems to be working well
