@@ -137,6 +137,7 @@ for x in IniList:
 # Main function
 ########################################################################
 BaseOutDir=config['DEFAULT']['BaseDir']
+BaseThemeDir=config['DEFAULT']['BaseThemeDir']
 infile = ''
 infile = (sys.argv[1])  # using ini here, oh procmail copy to handle
 parse_that_email(infile)

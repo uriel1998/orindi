@@ -34,11 +34,15 @@ ShortUUID https://github.com/skorokithakis/shortuuid
 #https://github.com/SpamScope/mail-parser
 #https://pypi.org/project/mail-parser/
 #pypandoc from package (python3-pypandoc) or via pip  https://pypi.org/project/pypandoc/
-HTMLParser from pip
+
 
 ## 4. Installation
 
 ### Installation of pico - include feed.twig creation as setup process.
+Basedir should be the base CONTENT directory.  
+Indent for multiline input
+multifile input as well, woot.
+
 
 ## 5. Usage
 
