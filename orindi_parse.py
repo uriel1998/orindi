@@ -30,6 +30,7 @@ def make_new_section(section):
     #https://stackoverflow.com/questions/31948528/python-loop-through-files-of-certain-extensions
     os.makedirs(FullOutDir)
     rootdir = AppDir
+    BaseOutDir 
 #put these in TemplateList
 section_md.template
 section-feed_md.template
