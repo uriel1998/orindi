@@ -23,6 +23,45 @@ configdir = user_config_dir(appname)
 if not os.path.isdir(configdir):
     os.makedirs(user_config_dir(appname))
 
+
+def make_new_section(section):
+    
+    # When a section doesn't exist yet and needs set up.
+    #https://stackoverflow.com/questions/31948528/python-loop-through-files-of-certain-extensions
+    os.makedirs(FullOutDir)
+    rootdir = AppDir
+#put these in TemplateList
+section_md.template
+section-feed_md.template
+section-feed_twig.template
+section_twig.template
+
+
+    for x in TemplateList:
+        templatefile=os.path.join(AppDir,x)
+
+#TODO - this is almost all pseudocode
+#remove .template from filename 
+#change _ to . in filename
+#change 'section' in filename to variable section 
+#copy line for line replacing @SECTION@ with variable section
+#section.md to main content outdir
+#all others to template dir
+
+                        # making files here
+                        infile = open(tmp,'r')
+    lines = infile.readlines()
+    infile.close
+    out = open(db, 'w')
+    for line in sorted(lines, key=lambda line: line.split()[0]):
+        out.write(line)
+    out.close
+                        
+                        LOOP HERE
+
+                        
+                        
+
 ########################################################################
 # Parsing that email!
 ########################################################################
@@ -75,7 +114,9 @@ def parse_that_email(messagefile):
                 
                 FullOutDir = BaseOutDir + '/' + outdir
                 if not os.path.isdir(FullOutDir):
-                    os.makedirs(FullOutDir)
+                    make_new_section(outdir)
+                    
+                    
                 filename=shortuuid.uuid() + '.md'
                 postfile = BaseOutDir + '/' + outdir + '/' + filename
                 f = open(postfile, 'w')
@@ -109,17 +150,18 @@ def parse_that_email(messagefile):
         
     fp.close
                 #currently commented out so stdout isn't cluttered
-                #Also need to remove empty paragraphs
+#TODO Also need to remove empty paragraphs
                 # using github markdown with pypandoc seems to be working well
-                # AND GET RID OF TRACKING BEACONS
+# TODO GET RID OF TRACKING BEACONS
                 # <img style="overflow: hidden;position: fixed;visibility: hidden !important;display: block !important;height: 1px !important;width: 1px !important;border: 0 !important;margin: 0 !important;padding: 0 !important;" src="https://connectednation.cmail20.com/t/j-o-chklljl-yuiyjkttht/o.gif" width="1" height="1" border="0" alt="">
 
 #NOTE: If directory does not exist, need to create KEYWORD.md and keyword-index.twig 
 # (instead of blog-index.twig) and create feed.md file in content folder
                 
 #TODO:  The subject is a string fragment match, not a word match, gah
-    #FFS THE PICO URL IS /?subdir
-
+#TODO THE PICO URL IS /?subdir
+#TODO: Determine which kind of parsing should be done first, then do that. 
+#TODO:
 ########################################################################
 # Read ini section
 ########################################################################
@@ -138,6 +180,7 @@ for x in IniList:
 ########################################################################
 BaseOutDir=config['DEFAULT']['BaseDir']
 BaseThemeDir=config['DEFAULT']['BaseThemeDir']
+AppDir=config['DEFAULT']['AppDir']
 infile = ''
 infile = (sys.argv[1])  # using ini here, oh procmail copy to handle
 parse_that_email(infile)
