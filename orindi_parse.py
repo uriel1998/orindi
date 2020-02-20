@@ -13,6 +13,7 @@ from appdirs import *
 from pathlib import Path
 import pypandoc
 from html import unescape
+from bs4 import BeautifulSoup
 ########################################################################
 # Defining configuration locations and such
 ########################################################################
@@ -32,6 +33,16 @@ def clean_string(instring):
     returnstring=unescape(returnstring)
     returnstring=returnstring.replace(':',' ').replace('|', ' ').replace('/',' ').replace('\\',' ').replace('  ',' ').replace('[', ' ').replace(']', ' ').replace('(', ' ').replace(')', ' ').replace("'", '’').replace('"', '“').replace('\n', '').replace('\r', '').replace('\t', '')
     return returnstring
+    
+    
+def replace_last(string, find, replace):
+    reversed = string[::-1]
+    replaced = reversed.replace(find[::-1], replace[::-1], 1)
+    return replaced[::-1]
+
+def replace_first(string, find, replace):
+    replaced = string.replace(find,replace, 1)
+    return replaced
     
     
 ########################################################################
@@ -69,8 +80,14 @@ def parse_that_email(messagefile):
     with open(messagefile,'r') as fp:
          mail = mailparser.parse_from_file_obj(fp)
 
-    date_time_obj = datetime.datetime.strptime(str(mail.date),"%Y-%m-%d %H:%M:%S")
-    #print (str(date_time_obj.date()) + '-' + str(date_time_obj.time()))
+    # Making sure there's not a missing date/time attribute here
+    if mail.date:
+        date_time_obj = datetime.datetime.strptime(str(mail.date),"%Y-%m-%d %H:%M:%S")
+    else:
+        thetime=time.strftime("%Y-%m-%d %H:%M:%S",localtime())
+        date_time_obj=datetime.datetime.strptime(thetime,"%Y-%m-%d %H:%M:%S")
+    
+    mailtime=(str(date_time_obj.date()) + ' ' + str(date_time_obj.time()))
 
     ##########################################################################
     # Match the fromstring to the outdirectory
@@ -118,25 +135,40 @@ def parse_that_email(messagefile):
                 f.write('Title: ' + clean_string(mail.subject) + "\n")
                 f.write('Description: ' + clean_string(mail.subject) + "\n")
                 f.write('Author: ' + FromString + "\n")
-                f.write('Date: ' + str(mail.date) + "\n")
+                f.write('Date: ' + str(mailtime) + "\n")
                 f.write('Robots: noindex,nofollow' + "\n")
                 f.write('Template: index' + "\n")
                 f.write ('---' + "\n")
-#TODO:  It keeps locking up here on that Groupon mail, not sure why
                 if mail.text_html:
-                    bodyhtml = str(mail.text_html).replace(':',' ').replace('|', ' ').replace('/',' ').replace('\\',' ').replace('  ',' ').replace('[', ' ').replace(']', ' ').replace('(', ' ').replace(')', ' ').replace("'", '’').replace('"', '“').replace('\n', '').replace('\r', '').replace('\t', '')
+                    bodyhtml=str(mail.text_html)
+                    bodyhtml=replace_first(bodyhtml,"['","")
+                    bodyhtml=replace_last(bodyhtml,"']","")
+                    bodyhtml = bodyhtml.replace("=\n", "")
+                    bodyhtml = bodyhtml.replace("\n", "")
+                    bodyhtml=unescape(bodyhtml)
+                    tree = BeautifulSoup(bodyhtml, 'lxml')
+                    bodyhtml = tree.prettify()
                     bodyhtml = bodyhtml.replace("\\n", "<br />").replace("\\t", "")
-                    print ("FUCKER")
                     writestring = pypandoc.convert_text(bodyhtml, 'markdown_github', format='html')
+                    writestring = writestring.replace("\nstyle", " style")
+                    writestring = writestring.replace("\n]", "]")
+                    writestring = writestring.replace("[\n", "[")
                     f.write(writestring + "\n")
                 else:
                     if mail.text_plain:
                         bodytxt = clean_string(mail.text_plain)
                         f.write(bodytxt + "\n")
                     else: 
-                        bodyhtml = clean_string(mail.text_not_managed)
-                        bodyhtml = bodyhtml.replace("\\n", "").replace("\\t", "")
+                        bodyhtml=str(mail.text_not_managed)
+                        bodyhtml=replace_first(bodyhtml,"['","")
+                        bodyhtml=replace_last(bodyhtml,"']","")
+                        bodyhtml = bodyhtml.replace("=\n", "")
+                        bodyhtml=unescape(bodyhtml)
+                        tree = BeautifulSoup(bodyhtml, 'lxml')
+                        bodyhtml = tree.prettify()
+                        bodyhtml = bodyhtml.replace("\\n", "<br />").replace("\\t", "")
                         writestring = pypandoc.convert_text(bodyhtml, 'markdown_github', format='html')
+                        writestring = writestring.replace("\nstyle", " style")
                         f.write(writestring + "\n")
                 f.close
         

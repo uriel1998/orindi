@@ -34,7 +34,7 @@ ShortUUID https://github.com/skorokithakis/shortuuid
 #https://github.com/SpamScope/mail-parser
 #https://pypi.org/project/mail-parser/
 #pypandoc from package (python3-pypandoc) or via pip  https://pypi.org/project/pypandoc/
-
+#beautifulsoup - because holy crap, there's a lot of bad html out there.
 
 ## 4. Installation
 
@@ -55,17 +55,23 @@ THE PICO URL IS /?subdir
 So http://bunyip.stevesaus.me/pico/?sjw-feed
 for the feed
 
+MOST emails look pretty much how they're supposed to.  Linkedin emails seem to
+get mangled to hell.  Some extra spaces and linefeeds, but I'm not sure I want 
+to keep trying to parse them in the main program...
 
 ## 6. TODO
 
 * I don't want to further customize themes. Seems like against the point of 
   pico here.  However, should have default index.md that shows ALL pages, right?
+  And a header/footer which reflects the program.  (But it also is beside the 
+  point because we're using pico to make an RSS feed anyway)
 * Which plugins should be added in (recommendations, anyway):
     - GZIP
     - PicoTooManyPages
     - Pico-Robots
+    - pico-minify
 * Per section output chooser - (or rather, first attempt one)  
-* Clean output further - remove empty paragraphs, maybe a tidy library?
+* Clean output further - remove empty paragraphs, maybe a tidy library? (Beautiful Soup did a LOT, though)
 * Remove tracking beacons completely.  Not sure how other than to look for 
   img tags with small pixel sizes or img style="overflow: hidden"
 
