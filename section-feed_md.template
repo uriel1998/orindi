@@ -1,5 +1,5 @@
 ---
-Title: politics-feed
+Title: @SECTION@-feed
 Robots: noindex,nofollow
-Template: politics-feed
+Template: @SECTION@-feed
 ---

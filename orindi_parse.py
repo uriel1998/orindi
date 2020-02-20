@@ -34,15 +34,11 @@ def make_new_section(section,fulloutdir,appdir,basethemedir,basedir):
     for x in TemplateList.split(' '):
         templatefile=os.path.join(appdir,x)
         tmp1 = x.replace(".template", "").replace("_", ".").replace("section",section)
-        print (tmp1)
         if "twig" not in tmp1:
-            print ("1")
             outfile=os.path.join(basedir,tmp1)
         else:
-            print ("2")
             outfile=os.path.join(basethemedir,tmp1)
  
-        print (outfile)
         if templatefile:
             infile = open(templatefile,'r')
             lines = infile.readlines()
@@ -58,7 +54,7 @@ def make_new_section(section,fulloutdir,appdir,basethemedir,basedir):
 # Parsing that email!
 ########################################################################
 def parse_that_email(messagefile):
-    print ('Message file is ' + messagefile)
+    #print ('Message file is ' + messagefile)
     
     with open(messagefile,'r') as fp:
          mail = mailparser.parse_from_file_obj(fp)
@@ -66,7 +62,7 @@ def parse_that_email(messagefile):
     print('To: ' + str(mail.to))
 
     date_time_obj = datetime.datetime.strptime(str(mail.date),"%Y-%m-%d %H:%M:%S")
-    print (str(date_time_obj.date()) + '-' + str(date_time_obj.time()))
+    #print (str(date_time_obj.date()) + '-' + str(date_time_obj.time()))
 
     ##########################################################################
     # Match the fromstring to the outdirectory
@@ -95,13 +91,11 @@ def parse_that_email(messagefile):
                 for y in FromList.split():
                     if y in fromliststr:
                         outdir = keyword
-                        print(keyword)
             if not outdir:
                 if SubjectList:
                     for y in SubjectList.split(','):
                         if y in str.lower(mail.subject):
                             outdir = keyword
-                            print(keyword)
             if outdir:
                 
                 FullOutDir = BaseOutDir + '/' + outdir

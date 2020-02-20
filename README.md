@@ -43,6 +43,8 @@ Basedir should be the base CONTENT directory.
 Indent for multiline input
 multifile input as well, woot.
 
+User should be part of same group as pico (www-data, probably) and CHMOD pico/content and pico/themes to 775 instead of 755 and use sticky bit (chmod -t DIR) to reduce probability 
+of malicious overwrites, etc.
 
 ## 5. Usage
 
