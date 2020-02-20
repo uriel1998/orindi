@@ -76,7 +76,7 @@ to keep trying to parse them in the main program...
 <img style="overflow: hidden;position: fixed;visibility: hidden !important;display: block !important;height: 1px !important;width: 1px !important;border: 0 !important;margin: 0 !important;padding: 0 !important;" src="https://connectednation.cmail20.com/t/j-o-chklljl-yuiyjkttht/o.gif" width="1" height="1" border="0" alt="">
 * set up input from procmail as well, right now we can scan a directory or take an input file only
 * Clean up documentation, duh
-* Create requirements.txt
+
 
 ### Roadmap:
 
