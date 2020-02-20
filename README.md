@@ -63,7 +63,7 @@ to keep trying to parse them in the main program...
 
 * I don't want to further customize themes. Seems like against the point of 
   pico here.  However, should have default index.md that shows ALL pages, right?
-  And a header/footer which reflects the program.  (But it also is beside the 
+* Add a header/footer which reflects the program.  (But it also is beside the 
   point because we're using pico to make an RSS feed anyway)
 * Which plugins should be added in (recommendations, anyway):
     - GZIP
@@ -76,7 +76,8 @@ to keep trying to parse them in the main program...
   img tags with small pixel sizes or img style="overflow: hidden"
 
 <img style="overflow: hidden;position: fixed;visibility: hidden !important;display: block !important;height: 1px !important;width: 1px !important;border: 0 !important;margin: 0 !important;padding: 0 !important;" src="https://connectednation.cmail20.com/t/j-o-chklljl-yuiyjkttht/o.gif" width="1" height="1" border="0" alt="">
-
+* set up input from procmail as well, right now we can scan a directory or take an input file only
+* Clean up documentation, duh
 
 ### Roadmap:
 
