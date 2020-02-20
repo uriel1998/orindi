@@ -1,8 +1,8 @@
 # orindi
 
-A modular system to take a list of RSS feeds, process them, and send them to 
-social media with images, content warnings, and sensitive image flags when 
-available. 
+Transform your e-mail newsletters into webpages and an RSS feed. Uses pico as a front end.
+`orindi` is an anglicization of ørindi, meaning "message".
+
 
 ![orindi logo](https://raw.githubusercontent.com/uriel1998/orindi/master/orindi-icon.png "logo")
 
