@@ -27,19 +27,22 @@ if not os.path.isdir(configdir):
 
 ########################################################################
 # When a section doesn't exist yet and needs set up.########################################################################
-def make_new_section(section):
+def make_new_section(section,fulloutdir,appdir,basethemedir,basedir):
     
-    os.makedirs(FullOutDir)
-    rootdir = AppDir
+    os.makedirs(fulloutdir)
     TemplateList = 'section_md.template section-feed_md.template section-feed_twig.template section_twig.template'
-    for x in TemplateList.split('  '):
-        templatefile=os.path.join(AppDir,x)
+    for x in TemplateList.split(' '):
+        templatefile=os.path.join(appdir,x)
         tmp1 = x.replace(".template", "").replace("_", ".").replace("section",section)
+        print (tmp1)
         if "twig" not in tmp1:
-            outfile=os.path.join(BaseDir,x)
-        else
-            outfile=os.path.join(BaseThemeDir,x)
-
+            print ("1")
+            outfile=os.path.join(basedir,tmp1)
+        else:
+            print ("2")
+            outfile=os.path.join(basethemedir,tmp1)
+ 
+        print (outfile)
         if templatefile:
             infile = open(templatefile,'r')
             lines = infile.readlines()
@@ -103,9 +106,8 @@ def parse_that_email(messagefile):
                 
                 FullOutDir = BaseOutDir + '/' + outdir
                 if not os.path.isdir(FullOutDir):
-                    make_new_section(outdir)
-                    
-                    
+                    make_new_section(outdir,FullOutDir,AppDir,BaseThemeDir,BaseOutDir)
+
                 filename=shortuuid.uuid() + '.md'
                 postfile = BaseOutDir + '/' + outdir + '/' + filename
                 f = open(postfile, 'w')
