@@ -63,8 +63,6 @@ to keep trying to parse them in the main program...
 
 * I don't want to further customize themes. Seems like against the point of 
   pico here.  However, should have default index.md that shows ALL pages, right?
-* Add a header/footer which reflects the program.  (But it also is beside the 
-  point because we're using pico to make an RSS feed anyway)
 * Which plugins should be added in (recommendations, anyway):
     - GZIP
     - PicoTooManyPages
