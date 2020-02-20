@@ -51,7 +51,26 @@ sure the `[feed#]` tags are different so it doesn't overwrite
 
 ## 5. Usage
 
+THE PICO URL IS /?subdir
+So http://bunyip.stevesaus.me/pico/?sjw-feed
+for the feed
+
+
 ## 6. TODO
+
+* I don't want to further customize themes. Seems like against the point of 
+  pico here.  However, should have default index.md that shows ALL pages, right?
+* Which plugins should be added in (recommendations, anyway):
+    - GZIP
+    - PicoTooManyPages
+    - Pico-Robots
+* Per section output chooser - (or rather, first attempt one)  
+* Clean output further - remove empty paragraphs, maybe a tidy library?
+* Remove tracking beacons completely.  Not sure how other than to look for 
+  img tags with small pixel sizes or img style="overflow: hidden"
+
+<img style="overflow: hidden;position: fixed;visibility: hidden !important;display: block !important;height: 1px !important;width: 1px !important;border: 0 !important;margin: 0 !important;padding: 0 !important;" src="https://connectednation.cmail20.com/t/j-o-chklljl-yuiyjkttht/o.gif" width="1" height="1" border="0" alt="">
+
 
 ### Roadmap:
 

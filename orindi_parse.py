@@ -64,7 +64,7 @@ def make_new_section(section,fulloutdir,appdir,basethemedir,basedir):
 # Parsing that email!
 ########################################################################
 def parse_that_email(messagefile):
-    #print ('Message file is ' + messagefile)
+    print ('Parsing message file  ' + messagefile)
     
     with open(messagefile,'r') as fp:
          mail = mailparser.parse_from_file_obj(fp)
@@ -122,9 +122,11 @@ def parse_that_email(messagefile):
                 f.write('Robots: noindex,nofollow' + "\n")
                 f.write('Template: index' + "\n")
                 f.write ('---' + "\n")
+#TODO:  It keeps locking up here on that Groupon mail, not sure why
                 if mail.text_html:
-                    bodyhtml = clean_string(mail.text_html)
+                    bodyhtml = str(mail.text_html).replace(':',' ').replace('|', ' ').replace('/',' ').replace('\\',' ').replace('  ',' ').replace('[', ' ').replace(']', ' ').replace('(', ' ').replace(')', ' ').replace("'", '’').replace('"', '“').replace('\n', '').replace('\r', '').replace('\t', '')
                     bodyhtml = bodyhtml.replace("\\n", "<br />").replace("\\t", "")
+                    print ("FUCKER")
                     writestring = pypandoc.convert_text(bodyhtml, 'markdown_github', format='html')
                     f.write(writestring + "\n")
                 else:
@@ -139,19 +141,7 @@ def parse_that_email(messagefile):
                 f.close
         
     fp.close
-                #currently commented out so stdout isn't cluttered
-#TODO Also need to remove empty paragraphs
-                # using github markdown with pypandoc seems to be working well
-# TODO GET RID OF TRACKING BEACONS
-                # <img style="overflow: hidden;position: fixed;visibility: hidden !important;display: block !important;height: 1px !important;width: 1px !important;border: 0 !important;margin: 0 !important;padding: 0 !important;" src="https://connectednation.cmail20.com/t/j-o-chklljl-yuiyjkttht/o.gif" width="1" height="1" border="0" alt="">
 
-#NOTE: If directory does not exist, need to create KEYWORD.md and keyword-index.twig 
-# (instead of blog-index.twig) and create feed.md file in content folder
-                
-#TODO:  The subject is a string fragment match, not a word match, gah
-#TODO THE PICO URL IS /?subdir
-#TODO: Determine which kind of parsing should be done first, then do that. 
-#TODO:
 ########################################################################
 # Read ini section
 ########################################################################
