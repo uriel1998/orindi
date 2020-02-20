@@ -1,7 +1,7 @@
 ---
-Title: politics
-Description: politics - Orindi
+Title: @SECTION@
+Description: @SECTION@ - Orindi
 Author: Orindi
 Robots: noindex,nofollow
-Template: politics-index
+Template: @SECTION@-index
 ---

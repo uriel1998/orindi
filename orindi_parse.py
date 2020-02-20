@@ -30,7 +30,7 @@ if not os.path.isdir(configdir):
 def make_new_section(section,fulloutdir,appdir,basethemedir,basedir):
     
     os.makedirs(fulloutdir)
-    TemplateList = 'section_md.template section-feed_md.template section-feed_twig.template section_twig.template'
+    TemplateList = 'section_md.template section-feed_md.template section-feed_twig.template section-index_twig.template'
     for x in TemplateList.split(' '):
         templatefile=os.path.join(appdir,x)
         tmp1 = x.replace(".template", "").replace("_", ".").replace("section",section)
@@ -58,8 +58,6 @@ def parse_that_email(messagefile):
     
     with open(messagefile,'r') as fp:
          mail = mailparser.parse_from_file_obj(fp)
-
-    print('To: ' + str(mail.to))
 
     date_time_obj = datetime.datetime.strptime(str(mail.date),"%Y-%m-%d %H:%M:%S")
     #print (str(date_time_obj.date()) + '-' + str(date_time_obj.time()))
@@ -106,6 +104,10 @@ def parse_that_email(messagefile):
                 postfile = BaseOutDir + '/' + outdir + '/' + filename
                 f = open(postfile, 'w')
 
+#TODO: Sanitize title, description, author strings.
+#.replace(':',' ').replace('|', ' ').replace('/',' ').replace('\\',' ')
+#.replace('  ',' ').replace('[', ' ').replace(']', ' ').replace('(', ' ')
+#.replace(')', ' ').replace("'", '’').replace('"', '“').replace('\n', '').replace('\r', '').replace('\t', '')
                 f.write ('---' + "\n")
                 f.write('Title: ' + str(mail.subject) + "\n")
                 f.write('Description: ' + str(mail.subject) + "\n")
