@@ -29,6 +29,7 @@ if not os.path.isdir(configdir):
 ########################################################################
 def clean_string(instring):
     returnstring=str(instring)
+    returnstring=unescape(returnstring)
     returnstring=returnstring.replace(':',' ').replace('|', ' ').replace('/',' ').replace('\\',' ').replace('  ',' ').replace('[', ' ').replace(']', ' ').replace('(', ' ').replace(')', ' ').replace("'", '’').replace('"', '“').replace('\n', '').replace('\r', '').replace('\t', '')
     return returnstring
     
@@ -83,7 +84,7 @@ def parse_that_email(messagefile):
             # Mailparser returns each thing as an odd tuple, so this works
             # best for trying to parse it.
             
-            fromliststr = str(mail.from_).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", ' ').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
+            fromliststr = clean_string(mail.from_)
             
             # Getting output from addresses here before I transform the string
             FromString = ''
@@ -113,9 +114,6 @@ def parse_that_email(messagefile):
                 postfile = BaseOutDir + '/' + outdir + '/' + filename
                 f = open(postfile, 'w')
 
-#TODO: Sanitize title, description, author strings.
-                
-
                 f.write ('---' + "\n")
                 f.write('Title: ' + clean_string(mail.subject) + "\n")
                 f.write('Description: ' + clean_string(mail.subject) + "\n")
@@ -125,20 +123,17 @@ def parse_that_email(messagefile):
                 f.write('Template: index' + "\n")
                 f.write ('---' + "\n")
                 if mail.text_html:
-                    bodyhtml = str(mail.text_html).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", ' ').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
+                    bodyhtml = clean_string(mail.text_html)
                     bodyhtml = bodyhtml.replace("\\n", "<br />").replace("\\t", "")
-                    bodyhtml = unescape(bodyhtml)
                     writestring = pypandoc.convert_text(bodyhtml, 'markdown_github', format='html')
                     f.write(writestring + "\n")
                 else:
                     if mail.text_plain:
-                        bodytxt = str(mail.text_plain).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", '‘').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
-                        bodytxt = bodytxt.replace("\\n", "<br />").replace("\\t", "")
+                        bodytxt = clean_string(mail.text_plain)
                         f.write(bodytxt + "\n")
                     else: 
-                        bodyhtml = str(mail.text_not_managed).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", '‘').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
+                        bodyhtml = clean_string(mail.text_not_managed)
                         bodyhtml = bodyhtml.replace("\\n", "").replace("\\t", "")
-                        bodyhtml = unescape(bodyhtml)
                         writestring = pypandoc.convert_text(bodyhtml, 'markdown_github', format='html')
                         f.write(writestring + "\n")
                 f.close

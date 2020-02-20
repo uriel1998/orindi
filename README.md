@@ -46,6 +46,9 @@ multifile input as well, woot.
 User should be part of same group as pico (www-data, probably) and CHMOD pico/content and pico/themes to 775 instead of 755 and use sticky bit (chmod -t DIR) to reduce probability 
 of malicious overwrites, etc.
 
+ini files help keep things separate, but can be all in one as well. Just make 
+sure the `[feed#]` tags are different so it doesn't overwrite
+
 ## 5. Usage
 
 ## 6. TODO
