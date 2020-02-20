@@ -24,44 +24,32 @@ if not os.path.isdir(configdir):
     os.makedirs(user_config_dir(appname))
 
 
+
+########################################################################
+# When a section doesn't exist yet and needs set up.########################################################################
 def make_new_section(section):
     
-    # When a section doesn't exist yet and needs set up.
-    #https://stackoverflow.com/questions/31948528/python-loop-through-files-of-certain-extensions
     os.makedirs(FullOutDir)
     rootdir = AppDir
-    BaseOutDir 
-#put these in TemplateList
-section_md.template
-section-feed_md.template
-section-feed_twig.template
-section_twig.template
-
-
-    for x in TemplateList:
+    TemplateList = 'section_md.template section-feed_md.template section-feed_twig.template section_twig.template'
+    for x in TemplateList.split('  '):
         templatefile=os.path.join(AppDir,x)
+        tmp1 = x.replace(".template", "").replace("_", ".").replace("section",section)
+        if "twig" not in tmp1:
+            outfile=os.path.join(BaseDir,x)
+        else
+            outfile=os.path.join(BaseThemeDir,x)
 
-#TODO - this is almost all pseudocode
-#remove .template from filename 
-#change _ to . in filename
-#change 'section' in filename to variable section 
-#copy line for line replacing @SECTION@ with variable section
-#section.md to main content outdir
-#all others to template dir
-
-                        # making files here
-                        infile = open(tmp,'r')
-    lines = infile.readlines()
-    infile.close
-    out = open(db, 'w')
-    for line in sorted(lines, key=lambda line: line.split()[0]):
-        out.write(line)
-    out.close
-                        
-                        LOOP HERE
-
-                        
-                        
+        if templatefile:
+            infile = open(templatefile,'r')
+            lines = infile.readlines()
+            infile.close
+            out = open(outfile, 'w')
+            for line in lines:
+                line = line.replace("@SECTION@",section)
+                out.write(line)
+            out.close
+    
 
 ########################################################################
 # Parsing that email!
