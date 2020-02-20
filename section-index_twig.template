@@ -56,7 +56,7 @@
     <div id="main" role="main">
         <div class="container">
             {{ content }}
- {% for page in pages("@SECTION@")|sort_by("time")|reverse if not page.hidden %}
+ {% for page in pages("@SECTION@")|sort_by("time")|reverse %}
      <div class="post">
          <h3><a href="{{ page.url }}">{{ page.title }}</a></h3>
          <p class="date">{{ page.date_formatted }}</p>

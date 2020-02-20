@@ -24,9 +24,18 @@ if not os.path.isdir(configdir):
     os.makedirs(user_config_dir(appname))
 
 
-
 ########################################################################
-# When a section doesn't exist yet and needs set up.########################################################################
+# Getting rid of problematic characters
+########################################################################
+def clean_string(instring):
+    returnstring=str(instring)
+    returnstring=returnstring.replace(':',' ').replace('|', ' ').replace('/',' ').replace('\\',' ').replace('  ',' ').replace('[', ' ').replace(']', ' ').replace('(', ' ').replace(')', ' ').replace("'", '’').replace('"', '“').replace('\n', '').replace('\r', '').replace('\t', '')
+    return returnstring
+    
+    
+########################################################################
+# When a section doesn't exist yet and needs set up.
+########################################################################
 def make_new_section(section,fulloutdir,appdir,basethemedir,basedir):
     
     os.makedirs(fulloutdir)
@@ -105,12 +114,11 @@ def parse_that_email(messagefile):
                 f = open(postfile, 'w')
 
 #TODO: Sanitize title, description, author strings.
-#.replace(':',' ').replace('|', ' ').replace('/',' ').replace('\\',' ')
-#.replace('  ',' ').replace('[', ' ').replace(']', ' ').replace('(', ' ')
-#.replace(')', ' ').replace("'", '’').replace('"', '“').replace('\n', '').replace('\r', '').replace('\t', '')
+                
+
                 f.write ('---' + "\n")
-                f.write('Title: ' + str(mail.subject) + "\n")
-                f.write('Description: ' + str(mail.subject) + "\n")
+                f.write('Title: ' + clean_string(mail.subject) + "\n")
+                f.write('Description: ' + clean_string(mail.subject) + "\n")
                 f.write('Author: ' + FromString + "\n")
                 f.write('Date: ' + str(mail.date) + "\n")
                 f.write('Robots: noindex,nofollow' + "\n")
@@ -124,11 +132,11 @@ def parse_that_email(messagefile):
                     f.write(writestring + "\n")
                 else:
                     if mail.text_plain:
-                        bodytxt = str(mail.text_plain).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", ' ').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
+                        bodytxt = str(mail.text_plain).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", '‘').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
                         bodytxt = bodytxt.replace("\\n", "<br />").replace("\\t", "")
                         f.write(bodytxt + "\n")
                     else: 
-                        bodyhtml = str(mail.text_not_managed).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", ' ').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
+                        bodyhtml = str(mail.text_not_managed).replace('[', '').replace(']', '').replace('(', '').replace(')', '').replace(',', ' ').replace("'", '‘').replace("  ", ' ').replace('\n', '').replace('\r', '').replace('\t', '')
                         bodyhtml = bodyhtml.replace("\\n", "").replace("\\t", "")
                         bodyhtml = unescape(bodyhtml)
                         writestring = pypandoc.convert_text(bodyhtml, 'markdown_github', format='html')

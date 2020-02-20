@@ -20,7 +20,7 @@
           <category>{{ cat | e }}</category>
         {% endfor %}
       </item>
-      {% if loop.index == 10 %}{% set end = true %}{% endif %}
+      {% if loop.index == 20 %}{% set end = true %}{% endif %}
     {% endfor %}
   </channel>
 </rss>
