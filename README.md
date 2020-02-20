@@ -4,7 +4,7 @@ A modular system to take a list of RSS feeds, process them, and send them to
 social media with images, content warnings, and sensitive image flags when 
 available. 
 
-![orindi logo](https://raw.githubusercontent.com/uriel1998/orindi/master/orindi-open-graph.png "logo")
+![orindi logo](https://raw.githubusercontent.com/uriel1998/orindi/master/orindi-icon.png "logo")
 
 ## Contents
  1. [About](#1-about)
