@@ -14,6 +14,7 @@ from pathlib import Path
 import pypandoc
 from html import unescape
 from bs4 import BeautifulSoup
+import tempfile
 ########################################################################
 # Defining configuration locations and such
 ########################################################################
@@ -193,6 +194,19 @@ for x in IniList:
 BaseOutDir=config['DEFAULT']['BaseDir']
 BaseThemeDir=config['DEFAULT']['BaseThemeDir']
 AppDir=config['DEFAULT']['AppDir']
+
+### TODO:  Maybe if we take stdin and write it to a tmpfile and then pull the
+### tempfile? 
 infile = ''
-infile = (sys.argv[1])  # using ini here, oh procmail copy to handle
+if infile:
+    infile = (sys.argv[1])  # using ini here, oh procmail copy to handle
+else:
+    with tempfile.NamedTemporaryFile(mode='w', delete=False) as fp:
+        inf = sys.stdin
+        lines = inf.readlines()
+        for line in lines:
+            fp.write(line)
+        fp.close
+    infile = fp.name
+        
 parse_that_email(infile)
