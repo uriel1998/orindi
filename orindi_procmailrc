@@ -1,0 +1,25 @@
+PROCMAILD=$HOME/.config/procmail
+VERBOSE=off
+MAILDIR=$HOME/mail
+DEFAULT=$MAILDIR/steven
+LOGFILE=$PROCMAILD/log
+LOGABSTRACT=all
+#ARCHIVEBY=`date +%Y`
+#ARCHIVE=$DEFAULT/Archives/$ARCHIVEBY
+#MKARCHIVE=`test -d ${ARCHIVE} || mkdir -p ${ARCHIVE}`
+ 
+#change :0c: to :0: if you don't want regular delivery of the messages
+ 
+:0c:
+| #COMMAND HERE 
+
+
+#could also use this to put all possible email froms and subjects into...
+#...I guess?  Not sure that would speed up processing that much. 
+# From https://stackoverflow.com/questions/3976716/move-emails-with-procmail-if-it-matches-from-sender
+
+#EMAILFILE=/path/to/my/emailfile
+#FROM=`formail -xFrom: | sed -e 's/ *(.*)//; s/>.*//; s/.*[:<] *//'`
+#:0
+#* ? fgrep -qxis $FROM $EMAILFILE
+#myfolder

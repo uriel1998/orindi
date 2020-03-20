@@ -123,7 +123,6 @@ def parse_that_email(messagefile):
                         if y in str.lower(mail.subject):
                             outdir = keyword
             if outdir:
-                
                 FullOutDir = BaseOutDir + '/' + outdir
                 if not os.path.isdir(FullOutDir):
                     make_new_section(outdir,FullOutDir,AppDir,BaseThemeDir,BaseOutDir)
@@ -195,18 +194,19 @@ BaseOutDir=config['DEFAULT']['BaseDir']
 BaseThemeDir=config['DEFAULT']['BaseThemeDir']
 AppDir=config['DEFAULT']['AppDir']
 
-### TODO:  Maybe if we take stdin and write it to a tmpfile and then pull the
-### tempfile? 
 infile = ''
-if infile:
-    infile = (sys.argv[1])  # using ini here, oh procmail copy to handle
-else:
-    with tempfile.NamedTemporaryFile(mode='w', delete=False) as fp:
+if len(sys.argv)!= 2:
+    with tempfile.NamedTemporaryFile(mode='w', delete=False) as afp:
         inf = sys.stdin
         lines = inf.readlines()
         for line in lines:
-            fp.write(line)
-        fp.close
-    infile = fp.name
+            afp.write(line)
+        afp.close
+    infile = afp.name
+else:
+    infile = (sys.argv[1])  
         
 parse_that_email(infile)
+
+if os.path.exists afp.name:
+    os.unlink(afp.name)
