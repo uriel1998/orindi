@@ -208,5 +208,7 @@ else:
         
 parse_that_email(infile)
 
-if os.path.exists afp.name:
-    os.unlink(afp.name)
+
+cleanit = afp.name
+if os.path.exists(cleanit):
+    os.unlink(cleanit)
