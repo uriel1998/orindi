@@ -1,7 +1,6 @@
 PROCMAILD=$HOME/.config/procmail
 VERBOSE=off
 MAILDIR=$HOME/mail
-DEFAULT=$MAILDIR/steven
 LOGFILE=$PROCMAILD/log
 LOGABSTRACT=all
 #ARCHIVEBY=`date +%Y`
@@ -11,8 +10,7 @@ LOGABSTRACT=all
 #change :0c: to :0: if you don't want regular delivery of the messages
  
 :0c:
-| #COMMAND HERE 
-
+| /path/to/orindi/orindi_parse.py
 
 #could also use this to put all possible email froms and subjects into...
 #...I guess?  Not sure that would speed up processing that much. 

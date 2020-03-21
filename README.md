@@ -21,6 +21,9 @@ Transform your e-mail newsletters into webpages and an RSS feed. Uses pico as a 
 Transform your e-mail newsletters into webpages and an RSS feed. Uses pico as a front end.
 `orindi` is an anglicization of ørindi, meaning "message".
 
+The idea is that this should be able to slip into your existing workflow, 
+regardless of what that is or what you're using.  And if it doesn't, it's meant 
+to be as simple as possible to customize the code.
 
 ### Why Pico and Procmail?
 
@@ -74,15 +77,15 @@ should be part of the same user group as pico (www-data, probably).
 
 
 * Follow the installation instructions in [pico's documentation](http://picocms.org/docs/).  
-* Copy `orindi-index.twig` to pico's `/themes` directory.
+* Copy `orindi-index.twig` to pico's `/themes/default` directory.
 * Copy `index.md` to pico's `/content` directory.
-* Change permissions on pico's `/content` and `/themes` directory to 775 and
+* Change permissions on pico's `/content` and `/themes/default` directory to 775 and
 use the sticky bit (`chmod -t DIRECTORY`) to reduce the possibility of permission 
 issues.  
 
 ### Install python modules and application
 
-* `pip install -r requirements.txt` 
+* `pip install -r requirements.txt` or `pip3 install -r requirements.txt` if you didn't make a venv and still have python2 installed.
 * `mkdir -p $HOME/.config/orindi`
 * Edit `orindi.ini` (see instructions below)
 * `cp $PWD/orindi.ini $HOME/.config/orindi`
@@ -181,6 +184,12 @@ for i in `find $MAILDIR -type f \( -iname "*.*" ! -iname "dovecot*" ! -name "sub
 done
 ``
 
+A warning with the latter; the filenames that `dovecot` uses (at least) will 
+sometimes completely pooch the process.
+
+Or you could even use the same to process a different mailbox after some other 
+program has had a crack at it.  
+
 ### Viewing the output
 
 If `pico` is installed in the subdirectory `/pico` to your domain, then you 
@@ -196,6 +205,9 @@ to keep trying to parse them in the main program...
 
 ## 6. TODO
 
+* SOME STILL BORK IT - LOOK ON MY TEST SERVER
+* WHY ARE SUBDIRS NOT SHOWING UP?
+
 * Customize pico's theme a little bit
 * Which plugins should be added in (recommendations, anyway):
     - GZIP
@@ -206,13 +218,12 @@ to keep trying to parse them in the main program...
 * Clean output further - remove empty paragraphs, maybe a tidy library? (Beautiful Soup did a LOT, though)
 * Remove tracking beacons completely.  Not sure how other than to look for 
   img tags with small pixel sizes or img style="overflow: hidden"
-
+```
 <img style="overflow: hidden;position: fixed;visibility: hidden !important;display: block !important;height: 1px !important;width: 1px !important;border: 0 !important;margin: 0 !important;padding: 0 !important;" src="https://connectednation.cmail20.com/t/j-o-chklljl-yuiyjkttht/o.gif" width="1" height="1" border="0" alt="">
-* set up input from procmail as well, right now we can scan a directory or take an input file only
-* Clean up documentation, duh
+```
 * Enable use of [courier-maildrop](http://www.courier-mta.org/maildrop/) instead of procmail.
 * See if procmail has to wait between deliveries
-
+* Use errorcodes (sys.exit(3) for example) to indicate non-match?
 
 ### Roadmap:
 
