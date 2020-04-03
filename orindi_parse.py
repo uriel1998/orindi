@@ -171,6 +171,8 @@ def parse_that_email(messagefile):
                         writestring = writestring.replace("\nstyle", " style")
                         f.write(writestring + "\n")
                 f.close
+                modtime = time.mktime(date_time_obj.timetuple())
+                os.utime(postfile,(modtime,modtime))
         
     fp.close
 

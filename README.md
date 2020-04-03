@@ -75,6 +75,9 @@ If the files need to be uploaded elsewhere by a script after processing, you wil
 need a local mirror for the files to be written into. The user that runs `orindi` 
 should be part of the same user group as pico (www-data, probably). 
 
+* NOTE:  Tested with php7.3; when I had older versions of PHP the program ran 
+just fine, but the output (particularly of the RSS feed) was sometimes mis-parsed.
+
 
 * Follow the installation instructions in [pico's documentation](http://picocms.org/docs/).  
 * Copy `orindi-index.twig` to pico's `/themes/default` directory.
@@ -82,6 +85,12 @@ should be part of the same user group as pico (www-data, probably).
 * Change permissions on pico's `/content` and `/themes/default` directory to 775 and
 use the sticky bit (`chmod -t DIRECTORY`) to reduce the possibility of permission 
 issues.  
+* Optionally, if your setup will allow it, you may install pico somewhere else 
+(such as in the same directory as `orindi`) and create a symlink to /var/www/html 
+or wherever your webserver can see it.
+* If you have problems with serving HTTPS, you may need to manually set 
+themes_url, base_url, assets_url, plugins_url rewrite_url in `pico
+
 
 ### Install python modules and application
 
@@ -184,11 +193,16 @@ for i in `find $MAILDIR -type f \( -iname "*.*" ! -iname "dovecot*" ! -name "sub
 done
 ``
 
+(If you wished to remove the files, obviously just add `rm "$i"` to the loop.)
+
 A warning with the latter; the filenames that `dovecot` uses (at least) will 
 sometimes completely pooch the process.
 
 Or you could even use the same to process a different mailbox after some other 
 program has had a crack at it.  
+
+Also, `orindi` will set the outputted file to the same date/time as the mail 
+header, which will help with maintenance and housekeeping.  
 
 ### Viewing the output
 
@@ -205,15 +219,11 @@ to keep trying to parse them in the main program...
 
 ## 6. TODO
 
-* SOME STILL BORK IT - LOOK ON MY TEST SERVER
-* WHY ARE SUBDIRS NOT SHOWING UP?
-
+* Double check procmail setup - it doesn't seem to be executing the script and is just delivering the mail
+* Remove older mail/pages/etc as cleanup routine
 * Customize pico's theme a little bit
 * Which plugins should be added in (recommendations, anyway):
-    - GZIP
-    - PicoTooManyPages
-    - Pico-Robots
-    - pico-minify
+    https://github.com/alejandroliu/ForceHttpsPlugin
 * Per section output chooser - (or rather, first attempt one) so that we're not tied to pandoc so hard  
 * Clean output further - remove empty paragraphs, maybe a tidy library? (Beautiful Soup did a LOT, though)
 * Remove tracking beacons completely.  Not sure how other than to look for 
@@ -224,6 +234,8 @@ to keep trying to parse them in the main program...
 * Enable use of [courier-maildrop](http://www.courier-mta.org/maildrop/) instead of procmail.
 * See if procmail has to wait between deliveries
 * Use errorcodes (sys.exit(3) for example) to indicate non-match?
+* Try use of dehtml instead of pypandoc
+* Have some kind of security/password for it - oh, htaccess passwords This should work- http://user:password@www.domain.com/blah
 
 ### Roadmap:
 
