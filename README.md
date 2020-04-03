@@ -204,6 +204,23 @@ program has had a crack at it.
 Also, `orindi` will set the outputted file to the same date/time as the mail 
 header, which will help with maintenance and housekeeping.  
 
+### Cleaning up  
+
+The easiest way to clean up old files is through using a script like this, 
+substituting your pico content directory where appropriate:  
+
+```
+for i in `find /var/www/html/pico/content/ -type d | grep -v -e "content/$" | xargs realpath`; do 
+    find "$i" -mtime +30 | xargs rm -f
+    find "$i" -atime +30 | xargs rm -f
+done
+
+```
+
+The reverse grep is needed so you don't accidentally delete your subject index 
+files in the main content directory.  Of course, if you use pico for other 
+sites, you will want to edit the script appropriately.
+
 ### Viewing the output
 
 If `pico` is installed in the subdirectory `/pico` to your domain, then you 
