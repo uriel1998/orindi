@@ -48,9 +48,9 @@ This project is licensed under the MIT License. For the full license, see `LICEN
 
 ## 3. Prerequisites
 
-[Pandoc](https://pandoc.org/)
-[Pico](http://picocms.org/) 
-[procmail](https://linux.die.net/man/5/procmailrc)
+* [Pandoc](https://pandoc.org/)  
+* [Pico](http://picocms.org/)   
+* [procmail](https://linux.die.net/man/5/procmailrc)  
 
 
 ## 4. Installation
@@ -89,7 +89,8 @@ issues.
 (such as in the same directory as `orindi`) and create a symlink to /var/www/html 
 or wherever your webserver can see it.
 * If you have problems with serving HTTPS, you may need to manually set 
-themes_url, base_url, assets_url, plugins_url rewrite_url in `pico
+`themes_url`, `base_url`, `assets_url`, `plugins_url`, and `rewrite_url` 
+in `pico/config/config.yml`.  
 
 
 ### Install python modules and application
@@ -201,10 +202,11 @@ sometimes completely pooch the process.
 Or you could even use the same to process a different mailbox after some other 
 program has had a crack at it.  
 
-Also, `orindi` will set the outputted file to the same date/time as the mail 
-header, which will help with maintenance and housekeeping.  
 
 ### Cleaning up  
+
+When processing, `orindi` will set the outputted file to the same date/time 
+as the mail header, which will help with maintenance and housekeeping.  
 
 The easiest way to clean up old files is through using a script like this, 
 substituting your pico content directory where appropriate:  
@@ -237,7 +239,6 @@ to keep trying to parse them in the main program...
 ## 6. TODO
 
 * Double check procmail setup - it doesn't seem to be executing the script and is just delivering the mail
-* Remove older mail/pages/etc as cleanup routine
 * Customize pico's theme a little bit
 * Which plugins should be added in (recommendations, anyway):
     https://github.com/alejandroliu/ForceHttpsPlugin
