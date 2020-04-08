@@ -252,12 +252,13 @@ to keep trying to parse them in the main program...
 
 ## 6. TODO
 
-* Double check procmail setup - it doesn't seem to be executing the script and is just delivering the mail
+
 * Customize pico's theme a little bit
 * Which plugins should be added in (recommendations, anyway):
     https://github.com/alejandroliu/ForceHttpsPlugin
 * Per section output chooser - (or rather, first attempt one) so that we're not tied to pandoc so hard  
 * Clean output further - remove empty paragraphs, maybe a tidy library? (Beautiful Soup did a LOT, though)
+* Try use of dehtml instead of pypandoc
 * Remove tracking beacons completely.  Not sure how other than to look for 
   img tags with small pixel sizes or img style="overflow: hidden"
 ```
@@ -266,7 +267,7 @@ to keep trying to parse them in the main program...
 * Enable use of [courier-maildrop](http://www.courier-mta.org/maildrop/) instead of procmail.
 * See if procmail has to wait between deliveries
 * Use errorcodes (sys.exit(3) for example) to indicate non-match?
-* Try use of dehtml instead of pypandoc
+
 
 ### Roadmap:
 
