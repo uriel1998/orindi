@@ -169,6 +169,20 @@ Any mail that `orindi` gets that matches either the "from" condition or the
 "subject" condition will be put into the "crowdfunding" subdirectory and 
 "crowdfunding" feed.
 
+### Security  
+
+There is no default security set up with `orindi`.  This is not ideal, for 
+obvious reasons.
+
+The easiest way is to use *htaccess* basic authentication.  Instructions on 
+setting up *htaccess* for [Apache](https://www.elated.com/password-protecting-your-pages-with-htaccess/) and [Nginx](https://docs.nginx.com/nginx/admin-guide/security-controls/configuring-http-basic-authentication/) are available on the web (or the links in this sentence).
+
+Once you've set up *htaccess* authentication, the generated RSS feeds are 
+accessible at:
+
+`https://USERNAME:PASSWORD@domain.for.your.site/feed-link`
+
+
 ## 5. Usage
 
 `orindi` takes an email from either stdin or as a filename from the first 
@@ -253,7 +267,6 @@ to keep trying to parse them in the main program...
 * See if procmail has to wait between deliveries
 * Use errorcodes (sys.exit(3) for example) to indicate non-match?
 * Try use of dehtml instead of pypandoc
-* Have some kind of security/password for it - oh, htaccess passwords This should work- http://user:password@www.domain.com/blah
 
 ### Roadmap:
 
