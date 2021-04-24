@@ -1,9 +1,16 @@
 #!/bin/bash
 
+
 #get install directory
 export SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 # Needed for unredirector
 source `which muna.sh`
+
+if [ ! -d "$1" ];then
+    EMAIL_DIR=${SCRIPT_DIR}
+else
+    EMAIL_DIR="${1}"
+fi
 
 function ProgressBar {
 # Process data
@@ -26,11 +33,17 @@ tfile2=$(mktemp)
 tfile3=$(mktemp)
 tfile4=$(mktemp)
 
-for f in ${SCRIPT_DIR}*.eml 
-do
-    echo "Processing $f"
-    cat "$f" | sed '1,/X-Report-Abuse-To/d' | sed 's/=$//' | sed 's/=3D/=/g' | sed 's/=09/ /g' | sed 's/=2E/./g'  | lynx -dump -stdin -display_charset UTF-8 -width 140 -hiddenlinks=merge -listonly | awk '{print $2}' >> $tfile
-done
+
+while IFS= read -d $'\0' -r file ;do
+    #Just in Case
+    if [[ "${file}" == *'dovecot'* ]];then
+        echo "Skipping dovecot file"
+    else
+        echo "Processing ${file}"
+        cat "${file}" | sed '1,/X-Report-Abuse-To/d' | sed 's/=$//' | sed 's/=3D/=/g' | sed 's/=09/ /g' | sed 's/=2E/./g'  | lynx -dump -stdin -display_charset UTF-8 -width 140 -hiddenlinks=merge -listonly | awk '{print $2}' >> $tfile
+        rm "${file}"
+    fi
+done < <(find ${EMAIL_DIR} -type f -print0 )
 
 cat $tfile | sort | awk '!_[$0]++' > $tfile2
 echo "Unredirecting and selecting URLs"
@@ -55,6 +68,15 @@ while read -r line; do
         fi
     fi
 done < <(cat $tfile2)
+
+if [ ! -f ${SCRIPT_DIR}/ej_queue.txt ];then 
+    touch ${SCRIPT_DIR}/ej_queue.txt
+fi
+
+if [ ! -f ${SCRIPT_DIR}/ej_done.txt ];then 
+    touch ${SCRIPT_DIR}/ej_done.txt
+fi
+
 
 cat "$tfile3" | sort | awk '!_[$0]++' > ${SCRIPT_DIR}/ej_queue.txt
 
@@ -111,8 +133,11 @@ while read -r line; do
              lynx -dump -stdin -display_charset UTF-8 -width 80 | \
              sed -e 's/\*/•/g' | sed -e 's/Θ/\*/g' | sed -e 's/Φ/🞯/g' | sed 's/^/\t/' | sed -e 's/\^/\*/g' | sed -e 's/^[ \t]*//' \
               >> ${outfile} 
-              
-            printf "Originally found at %s\n\n" "$line" >> ${outfile}      
+            
+#TODO: Extract further URLs (and then select what we want) via cat ${tfile4} | hxwls  
+# Would probably require making these all functions, but it could also lead to a 
+# LOT of reprocessing. Except onthe webpage there's no need for redirect...
+            printf "\n\nOriginally found at %s\n\n" "$line" >> ${outfile}      
         fi
     fi
 done < <(cat ${SCRIPT_DIR}/ej_queue.txt)
@@ -124,4 +149,3 @@ rm "$tfile2"
 rm "$tfile3"
 rm "$tfile4"
 
-# rm -rf ${SCRIPT_DIR}/*.eml
