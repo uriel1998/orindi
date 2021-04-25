@@ -39,11 +39,14 @@ while IFS= read -d $'\0' -r file ;do
     if [[ "${file}" == *'dovecot'* ]];then
         echo "Skipping dovecot file"
     else
-        echo "Processing ${file}"
-        cat "${file}" | sed '1,/X-Report-Abuse-To/d' | sed 's/=$//' | sed 's/=3D/=/g' | sed 's/=09/ /g' | sed 's/=2E/./g'  | lynx -dump -stdin -display_charset UTF-8 -width 140 -hiddenlinks=merge -listonly | awk '{print $2}' >> $tfile
-        rm "${file}"
+        if [ -f ${file} ];then 
+            echo "Processing ${file}"
+            cat "${file}" | sed '1,/X-Report-Abuse-To/d' | sed 's/=$//' | sed 's/=3D/=/g' | sed 's/=09/ /g' | sed 's/=2E/./g'  | lynx -dump -stdin -display_charset UTF-8 -width 140 -hiddenlinks=merge -listonly | awk '{print $2}' >> $tfile
+            rm "${file}"
+        fi
     fi
 done < <(find ${EMAIL_DIR} -type f -print0 )
+
 
 cat $tfile | sort | awk '!_[$0]++' > $tfile2
 echo "Unredirecting and selecting URLs"
